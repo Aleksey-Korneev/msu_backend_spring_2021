@@ -9,11 +9,7 @@ class TicTacGame:
     Tic-tac-toe console game.
     """
 
-    PLAYER1 = 'X'
-    PLAYER2 = 'O'
-    NO_PLAYER = ''
-
-    def __init__(self, board_size):
+    def __init__(self, board_size=3):
         self.board_size = board_size
         self.board = [[' '] * board_size for _ in range(board_size)]
         self.player = 'X'
