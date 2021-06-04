@@ -2,6 +2,26 @@
 
 import unittest
 from tictac import TicTacGame
+import sys
+
+
+correct_output = """Ход игрока X.
+row = col = Ход игрока X.
+row = col = Недопустимые координаты.
+Ход игрока X.
+row = col = Недопустимые координаты.
+Ход игрока X.
+row = col = Недопустимые координаты.
+Ход игрока X.
+row = col = Некорректный ввод.
+Ход игрока X.
+row = col = Некорректный ввод.
+Ход игрока X.
+row = col = Некорректный ввод.
+Ход игрока X.
+row = col = Некорректный ввод.
+Ход игрока X.
+row = col = """
 
 
 class TestTicTacGame(unittest.TestCase):
@@ -17,18 +37,18 @@ class TestTicTacGame(unittest.TestCase):
         self.assertListEqual(self.game.board, [[" "] * 3 for _ in range(3)])
         self.assertEqual(self.game.player, "X")
 
-        def test_switch_player(self):
-            player = self.game.player
-            self.game.switch_player()
-            if player == "X":
-                self.assertEqual(self.game.player, "O")
-            else:
-                self.assertEqual(self.game.player, "X")
-            new_game = TicTacGame()
-            new_game.switch_player()
-            self.assertEqual(new_game.player, "O")
-            new_game.switch_player()
-            self.assertEqual(new_game.player, "X")
+    def test_switch_player(self):
+        player = self.game.player
+        self.game.switch_player()
+        if player == "X":
+            self.assertEqual(self.game.player, "O")
+        else:
+            self.assertEqual(self.game.player, "X")
+        new_game = TicTacGame()
+        new_game.switch_player()
+        self.assertEqual(new_game.player, "O")
+        new_game.switch_player()
+        self.assertEqual(new_game.player, "X")
 
     def test_update(self):
         self.game = TicTacGame()
@@ -97,6 +117,27 @@ class TestTicTacGame(unittest.TestCase):
         self.game.switch_player()
         self.game.update("2", "2")  # 9
         self.assertEqual(self.game.is_draw(), True)
+
+    # TODO
+    def test_input(self):
+        stdin = sys.stdin
+        sys.stdin = open("input.txt", "r")
+        stdout = sys.stdout
+        sys.stdout = open("output.txt", "w")
+
+        self.game = TicTacGame()
+        self.assertEqual(self.game.update(*self.game.input()), True)
+        for _ in range(7):
+            self.assertEqual(self.game.update(*self.game.input()), False)
+        self.assertEqual(self.game.update(*self.game.input()), True)
+
+        sys.stdin.close()
+        sys.stdin = stdin
+        sys.stdout.close()
+        sys.stdout = stdout
+
+        with open("output.txt", "r") as output:
+            self.assertEqual(correct_output, output.read())
 
 
 if __name__ == "__main__":
